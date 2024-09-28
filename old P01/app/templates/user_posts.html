@@ -1,0 +1,614 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3"
+      crossorigin="anonymous"
+    />
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav mr-auto">
+          <li class="nav-item active"><a class="nav-link" href="/">Home</a></li>
+          <li class="nav-item active">
+            <a class="nav-link" href="/restaurants">Restaurants</a>
+          </li>
+          <li class="nav-item active">
+            <a class="nav-link" href="/recipes/search">Recipes</a>
+          </li>
+          <li class="nav-item active">
+            <a class="nav-link" href="/user/{{viewing_username}}/saved_recipes"
+              >Profile</a
+            >
+          </li>
+          {% if lookingAtOwnBlog %}
+          <li style="padding: 0 10px">
+            <button
+              type="button"
+              class="btn btn-primary"
+              data-bs-toggle="modal"
+              data-bs-target="#staticBackdrop"
+            >
+              Make a Post
+            </button>
+            <div
+              class="modal fade"
+              id="staticBackdrop"
+              tabindex="-1"
+              aria-labelledby="staticBackdropLabel"
+              aria-hidden="true"
+            >
+              <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5
+                      class="modal-title text-center"
+                      id="staticBackdropLabel"
+                    >
+                      Create New Post
+                    </h5>
+                    <button
+                      type="button"
+                      class="btn-close"
+                      data-bs-dismiss="modal"
+                      aria-label="Close"
+                    ></button>
+                  </div>
+                  <div class="modal-body">
+                    <div style="display: flex; flex-direction: column">
+                      <form
+                        action="/api/make_post"
+                        method="post"
+                        enctype="multipart/form-data"
+                      >
+                        <div class="form-group">
+                          <div
+                            style="
+                              margin-top: 20px;
+                              display: flex;
+                              margin-bottom: 10px;
+                            "
+                          >
+                            <svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              width="24"
+                              height="24"
+                              fill="currentColor"
+                              class="bi bi-file-earmark-image"
+                              viewBox="0 0 16 16"
+                            >
+                              <path
+                                d="M6.502 7a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3z"
+                              />
+                              <path
+                                d="M14 14a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V2a2 2 0 0 1 2-2h5.5L14 4.5V14zM4 1a1 1 0 0 0-1 1v10l2.224-2.224a.5.5 0 0 1 .61-.075L8 11l2.157-3.02a.5.5 0 0 1 .76-.063L13 10V4.5h-2A1.5 1.5 0 0 1 9.5 3V1H4z"
+                              />
+                            </svg>
+                            <span style="padding-left: 14px"
+                              >Upload a Picture:</span
+                            >
+                          </div>
+
+                          <label
+                            for="exampleFormControlFile1"
+                            style="padding-right: 32px"
+                          >
+                          </label>
+                          <input
+                            type="file"
+                            class="form-control-file"
+                            id="exampleFormControlFile1"
+                            name="image_link"
+                          />
+                          <div class="form-group" style="margin-top: 30px">
+                            <label for="exampleFormControlTextarea1"
+                              >Write A Description:</label
+                            >
+                            <textarea
+                              class="form-control"
+                              id="exampleFormControlTextarea1"
+                              rows="3"
+                              name="post_description"
+                            ></textarea>
+                          </div>
+                        </div>
+                        <div class="modal-footer">
+                          <input
+                            type="submit"
+                            class="btn-primary rounded"
+                            style="padding: 2.5px 15px"
+                            value="Post"
+                          />
+                        </div>
+                      </form>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </li>
+          {% endif %}
+        </ul>
+      </div>
+    </nav>
+  </head>
+  <body>
+    <div style="width: 905px" class="mx-auto">
+      <div style="display: flex; justify-content: center; margin: 30px 0">
+        <div style="width: 291.67px; display: flex; justify-content: center">
+          <img
+            src="{{user_personal_info['profile_picture']}}"
+            style="border-radius: 999999px"
+            width="150px"
+            height="150px"
+          />
+        </div>
+        <section
+          style="
+            width: 613.33px;
+            height: 150px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+          "
+        >
+          <div style="display: flex; align-items: center">
+            <h1
+              class="display-4 text-lowercase"
+              style="font-size: 32px; padding-right: 30px"
+            >
+              {{username}}
+            </h1>
+            {% if lookingAtOwnBlog %}
+            <a href="/user/{{username}}/user_profile">
+              <button
+                class="btn-light rounded"
+                style="
+                  border: 1px solid black;
+                  height: 30px;
+                  align-self: center;
+                "
+              >
+                Edit Profile
+              </button>
+            </a>
+            {% endif %}
+          </div>
+          <div style="display: flex">
+            <p style="padding-right: 30px"><b>{{user_post_count}}</b> posts</p>
+            <p style="padding-right: 30px"><b>{{user_favorite_recipe_count}}</b> recipes</p>
+            <p><b>{{user_favorite_restaurant_count}}</b> restaurants</p>
+          </div>
+          <div>
+            <b>{{user_personal_info["display_name"]}}</b>
+            <p style="margin: 0">{{user_personal_info["bio"]}}</p>
+          </div>
+        </section>
+      </div>
+      <div
+        style="max-width: 905px; border-top: solid 1px rgb(236, 236, 236)"
+        class="mx-auto"
+      ></div>
+      <div
+        style="display: flex; justify-content: space-between; width: 400px"
+        class="mx-auto"
+      >
+        <a
+          href="/user/{{username}}/user_posts"
+          style="text-decoration: none; color: black"
+        >
+          <section
+            style="
+              padding-top: 19px;
+              padding-bottom: 20px;
+              border-top: 1px black solid;
+            "
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="16"
+              height="16"
+              fill="currentColor"
+              class="bi bi-grid-3x3"
+              viewBox="0 0 16 16"
+            >
+              <path
+                d="M0 1.5A1.5 1.5 0 0 1 1.5 0h13A1.5 1.5 0 0 1 16 1.5v13a1.5 1.5 0 0 1-1.5 1.5h-13A1.5 1.5 0 0 1 0 14.5v-13zM1.5 1a.5.5 0 0 0-.5.5V5h4V1H1.5zM5 6H1v4h4V6zm1 4h4V6H6v4zm-1 1H1v3.5a.5.5 0 0 0 .5.5H5v-4zm1 0v4h4v-4H6zm5 0v4h3.5a.5.5 0 0 0 .5-.5V11h-4zm0-1h4V6h-4v4zm0-5h4V1.5a.5.5 0 0 0-.5-.5H11v4zm-1 0V1H6v4h4z"
+              />
+            </svg>
+            <span>Posts</span>
+          </section>
+        </a>
+
+        <a
+          href="/user/{{username}}/saved_recipes"
+          style="text-decoration: none; color: black"
+        >
+          <section style="padding-top: 20px; padding-bottom: 20px">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-journals" viewBox="0 0 16 16">
+              <path d="M5 0h8a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2 2 2 0 0 1-2 2H3a2 2 0 0 1-2-2h1a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V4a1 1 0 0 0-1-1H3a1 1 0 0 0-1 1H1a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v9a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H5a1 1 0 0 0-1 1H3a2 2 0 0 1 2-2z"/>
+              <path d="M1 6v-.5a.5.5 0 0 1 1 0V6h.5a.5.5 0 0 1 0 1h-2a.5.5 0 0 1 0-1H1zm0 3v-.5a.5.5 0 0 1 1 0V9h.5a.5.5 0 0 1 0 1h-2a.5.5 0 0 1 0-1H1zm0 2.5v.5H.5a.5.5 0 0 0 0 1h2a.5.5 0 0 0 0-1H2v-.5a.5.5 0 0 0-1 0z"/>
+            </svg>
+            <span>Recipes</span>
+          </section>
+        </a>
+
+        <a
+          href="/user/{{username}}/saved_restaurants"
+          style="text-decoration: none; color: black"
+        >
+          <section style="padding-top: 20px; padding-bottom: 20px">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-shop" viewBox="0 0 16 16">
+              <path d="M2.97 1.35A1 1 0 0 1 3.73 1h8.54a1 1 0 0 1 .76.35l2.609 3.044A1.5 1.5 0 0 1 16 5.37v.255a2.375 2.375 0 0 1-4.25 1.458A2.371 2.371 0 0 1 9.875 8 2.37 2.37 0 0 1 8 7.083 2.37 2.37 0 0 1 6.125 8a2.37 2.37 0 0 1-1.875-.917A2.375 2.375 0 0 1 0 5.625V5.37a1.5 1.5 0 0 1 .361-.976l2.61-3.045zm1.78 4.275a1.375 1.375 0 0 0 2.75 0 .5.5 0 0 1 1 0 1.375 1.375 0 0 0 2.75 0 .5.5 0 0 1 1 0 1.375 1.375 0 1 0 2.75 0V5.37a.5.5 0 0 0-.12-.325L12.27 2H3.73L1.12 5.045A.5.5 0 0 0 1 5.37v.255a1.375 1.375 0 0 0 2.75 0 .5.5 0 0 1 1 0zM1.5 8.5A.5.5 0 0 1 2 9v6h1v-5a1 1 0 0 1 1-1h3a1 1 0 0 1 1 1v5h6V9a.5.5 0 0 1 1 0v6h.5a.5.5 0 0 1 0 1H.5a.5.5 0 0 1 0-1H1V9a.5.5 0 0 1 .5-.5zM4 15h3v-5H4v5zm5-5a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v3a1 1 0 0 1-1 1h-2a1 1 0 0 1-1-1v-3zm3 0h-2v3h2v-3z"/>
+            </svg>
+            <span>Restaurants</span>
+          </section>
+        </a>
+      </div>
+      {% if user_post_count == 0 %}
+      <div
+        style="
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          margin-top: 30px;
+        "
+      >
+        <p style="font-size: 32px">You have no posts :(</p>
+        <button
+          type="button"
+          class="btn btn-primary"
+          data-bs-toggle="modal"
+          data-bs-target="#staticBackdrop"
+        >
+          Make a Post
+        </button>
+
+        <!-- Modal -->
+        <div
+          class="modal fade"
+          id="staticBackdrop"
+          tabindex="-1"
+          aria-labelledby="staticBackdropLabel"
+          aria-hidden="true"
+        >
+          <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title text-center" id="staticBackdropLabel">
+                  Create New Post
+                </h5>
+                <button
+                  type="button"
+                  class="btn-close"
+                  data-bs-dismiss="modal"
+                  aria-label="Close"
+                ></button>
+              </div>
+              <div class="modal-body">
+                <div style="display: flex; flex-direction: column">
+                  <form action="/api/make_post" method="post">
+                    <div class="form-group">
+                      <div
+                        style="
+                          margin-top: 20px;
+                          display: flex;
+                          margin-bottom: 10px;
+                        "
+                      >
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          width="24"
+                          height="24"
+                          fill="currentColor"
+                          class="bi bi-file-earmark-image"
+                          viewBox="0 0 16 16"
+                        >
+                          <path
+                            d="M6.502 7a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3z"
+                          />
+                          <path
+                            d="M14 14a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V2a2 2 0 0 1 2-2h5.5L14 4.5V14zM4 1a1 1 0 0 0-1 1v10l2.224-2.224a.5.5 0 0 1 .61-.075L8 11l2.157-3.02a.5.5 0 0 1 .76-.063L13 10V4.5h-2A1.5 1.5 0 0 1 9.5 3V1H4z"
+                          />
+                        </svg>
+                        <span style="padding-left: 14px"
+                          >Upload a Picture:</span
+                        >
+                      </div>
+
+                      <label
+                        for="exampleFormControlFile1"
+                        style="padding-right: 32px"
+                      >
+                      </label>
+                      <input
+                        type="file"
+                        class="form-control-file"
+                        id="exampleFormControlFile1"
+                        name="image_link"
+                      />
+                      <div class="form-group" style="margin-top: 30px">
+                        <label for="exampleFormControlTextarea1"
+                          >Write A Description:</label
+                        >
+                        <textarea
+                          class="form-control"
+                          id="exampleFormControlTextarea1"
+                          rows="3"
+                          name="post_description"
+                        ></textarea>
+                      </div>
+                    </div>
+                    <div class="modal-footer">
+                      <input
+                        type="submit"
+                        class="btn-primary rounded"
+                        style="padding: 2.5px 15px"
+                        value="Post"
+                      />
+                    </div>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      {% endif %}
+        <div>
+          <div class="row g-5">
+            {% for post in user_posts %}
+            <div class="col-4">
+              <div
+                data-bs-toggle="modal"
+                data-bs-target="#postModal{{post['post_id']}}"
+                style="
+                  width: 293px;
+                  height: 293px;
+                  overflow: hidden;
+                  display: flex;
+                  align-items: center;
+                  justify-content: center;
+                  background-color: grey;
+                  cursor: pointer;
+                "
+              >
+                <img style="height: 293px" src="{{post['image_link']}}" />
+              </div>
+              <!-- Modal -->
+              <div
+                class="modal fade"
+                id="postModal{{post['post_id']}}"
+                tabindex="-1"
+                role="dialog"
+                aria-labelledby="exampleModalCenterTitle"
+                aria-hidden="true"
+              >
+                <div
+                  class="modal-dialog modal-dialog-centered"
+                  role="document"
+                  style="justify-content: center"
+                >
+                  <div class="modal-content" style="display: table">
+                    <div class="modal-body p-0">
+                      <div style="display: flex">
+                        <!-- Post Picture -->
+                        <img
+                          src="{{post['image_link']}}"
+                          style="max-height: 75vh; width: auto; height: 75vh; max-width: 65vw;"
+                        />
+                        <!-- Comment Section -->
+                        <main style="display: flex; flex-direction: column; height: 75vh;">
+                          <section class="p-3" style="overflow-y: scroll; height: 90%">
+                            <div
+                              style="
+                                display: flex;
+                                align-items: center;
+                                width: 25vw;
+                              "
+                            >
+                              <img
+                                src="{{user_personal_info['profile_picture']}}"
+                                style="border-radius: 9999px"
+                                width="38px"
+                                height="38px"
+                              />
+                              <a
+                                href="/user/{{username}}/user_posts"
+                                style="
+                                  margin-left: 1rem;
+                                  cursor: pointer;
+                                  text-decoration: none;
+                                  color: black;
+                                "><b>{{username}}</b></a>
+                              {% if lookingAtOwnBlog %}
+                              <form method="post" action="/api/delete_post" style="margin-left: auto;">
+                                <input
+                                  type="text"
+                                  name="post_id"
+                                  value="{{post['post_id']}}"
+                                  style="display: none"
+                                />
+                                <input
+                                  type="submit"
+                                  class="btn-danger rounded"
+                                  style="margin-left: auto"
+                                  value="Delete"
+                                >
+                                  
+                                </input>
+                              </form>
+                              {% endif %}
+                            </div>
+                            <hr>
+                            {% if post['post_description'] %}
+                            <div style="display: flex;">
+                              <img
+                                src="{{user_personal_info['profile_picture']}}"
+                                style="border-radius: 9999px; align-self: center;"
+                                width="38px"
+                                height="38px"
+                                
+                              />
+                              
+                                <div style="
+                                  
+                                  margin-left: 1rem;
+                                  cursor: pointer;
+                                  text-decoration: none;
+                                  color: black;
+                                  display: flex;
+                                  flex-direction: column;
+                                ">
+                                <a href="/user/{{username}}/user_posts" 
+                                  style="text-decoration: none; 
+                                        color: black;"><b>{{username}}</b></a> 
+                                <span>{{post['post_description']}}</span>
+                                </div>
+                              
+                            </div>
+                            {% endif %}
+                            <main id="comment_container_{{post['post_id']}}">
+                              {% for comment in db_builder.get_comments(post['post_id'], 0, 50) %}
+                              <div style="display: flex; margin-top: 30px;" id="comment_id{{comment['comment_id']}}">
+                                <img
+                                  src="{{db_builder.get_user_info(comment['user_id'])['profile_picture']}}"
+                                  style="border-radius: 9999px; align-self: center;"
+                                  width="38px"
+                                  height="38px"
+                                  
+                                />
+                                
+                                  <div style="
+                                    
+                                    margin-left: 1rem;
+                                    cursor: pointer;
+                                    text-decoration: none;
+                                    color: black;
+                                    display: flex;
+                                    flex-direction: column;
+                                    width: 80%;
+                                    max-width: 80%;
+                                    
+                                  ">
+                                  <a href="/user/{{db_builder.get_username_from_id(comment['user_id'])}}/user_posts" 
+                                    style="text-decoration: none; 
+                                          color: black;"><b>{{db_builder.get_username_from_id(comment['user_id'])}}</b></a> 
+                                  <span style="word-wrap: break-word;">{{comment["comment"]}}</span>
+                                  </div>
+                                {% if lookingAtOwnBlog %}
+                                <svg id="delete_comment_id{{comment['comment_id']}}" style="align-self: center; margin-left: auto; cursor: pointer" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
+                                  <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z"/>
+                                  <path fill-rule="evenodd" d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"/>
+                                </svg>
+
+                                {% elif comment['user_id'] == viewer_user_id %}
+                                <svg id="delete_comment_id{{comment['comment_id']}}" style="align-self: center; margin-left: auto; cursor: pointer;" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
+                                  <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z"/>
+                                  <path fill-rule="evenodd" d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"/>
+                                </svg>
+                                {% else %}
+                                {% endif %}
+                                
+                                <script>
+                                  (function() {
+                                    let delete_comment = document.getElementById("delete_comment_id" + "{{comment['comment_id']}}")
+                                    let comment = document.getElementById("comment_id" + "{{comment['comment_id']}}")
+                                    async function postData(url = '', data = {}) {
+                                    // Default options are marked with *
+                                    const response = await fetch(url, {
+                                      method: 'POST', // *GET, POST, PUT, DELETE, etc.
+                                      mode: 'cors', // no-cors, *cors, same-origin
+                                      cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
+                                      credentials: 'same-origin', // include, *same-origin, omit
+                                      headers: {
+                                        'Content-Type': 'application/json'
+                                        // 'Content-Type': 'application/x-www-form-urlencoded',
+                                      },
+                                      redirect: 'follow', // manual, *follow, error
+                                      referrerPolicy: 'no-referrer', // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
+                                      body: JSON.stringify(data) // body data type must match "Content-Type" header
+                                    });
+                                    return response.json(); // parses JSON response into native JavaScript objects
+                                    }
+                                    delete_comment.onclick = () => {
+                                      postData("/api/delete_comment", {comment_id: "{{comment['comment_id']}}"}).then(data => {
+                                        comment.remove()
+                                      })
+                                    }
+                                  
+
+                                  })()
+                                </script>
+                              </div>
+                              {% endfor %}
+                            </main>
+                          </section>
+                          <section style="display: flex; align-items: center; height: 5vh; justify-content: space-evenly;">
+                            <textarea id="create_comment_{{post['post_id']}}" rows="1" placeholder="Add a comment..." style="width: 80%; resize: none;"></textarea>
+                            <a id="post_comment_{{post['post_id']}}" style="text-decoration: none; padding: 2.5px 12.5px; cursor: pointer;" class="btn-primary rounded">Post</a>
+                          </section>
+                          <script>
+                            (function () {
+                              let comment_container = document.getElementById("comment_container_{{post['post_id']}}")
+                              let comment_box = document.getElementById("create_comment_" + "{{post['post_id']}}")
+                              let submit_button = document.getElementById("post_comment_" + "{{post['post_id']}}")
+                              async function postData(url = '', data = {}) {
+                              // Default options are marked with *
+                              const response = await fetch(url, {
+                                method: 'POST', // *GET, POST, PUT, DELETE, etc.
+                                mode: 'cors', // no-cors, *cors, same-origin
+                                cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
+                                credentials: 'same-origin', // include, *same-origin, omit
+                                headers: {
+                                  'Content-Type': 'application/json'
+                                  // 'Content-Type': 'application/x-www-form-urlencoded',
+                                },
+                                redirect: 'follow', // manual, *follow, error
+                                referrerPolicy: 'no-referrer', // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
+                                body: JSON.stringify(data) // body data type must match "Content-Type" header
+                              });
+                              return response.json(); // parses JSON response into native JavaScript objects
+                            }
+                            
+
+                            submit_button.onclick = () => {
+                              postData("/api/make_comment", {post_id: "{{post['post_id']}}", comment: comment_box.value}).then((data) => {
+                                window.location.href = window.location.pathname+"?"+$.param({'openModalOnLoad':"{{post['post_id']}}"})
+                              })
+                            }
+                            })();
+                          </script>
+                        </div>
+                        
+                      </div>
+                    </div>
+                  </div>
+                </div>
+            </div>
+            {% endfor %}
+          </div>
+        </div>
+    </div>
+    
+
+    <!-- import jquery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+    <!-- Bootstrap Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+
+    <!--Modal JS Script -->
+    {% if openModalOnLoad %}
+    <script type="text/javascript">
+      window.onload = () => {
+          $('#postModal{{openModalOnLoad}}').modal('show');
+      }
+    </script>
+    {% endif %}
+  </body>
+</html>

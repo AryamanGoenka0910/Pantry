@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+    <meta charset="utf-8">
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        {% if logged_in %}
+        <ul class="navbar-nav mr-auto">
+            <li class="nav-item active"><a class="nav-link" href="/">Home</a></li>
+            <li class="nav-item active"><a class="nav-link" href="/restaurants">Restaurants</a></li>
+            <li class="nav-item active"><a class="nav-link" href="/recipes/search">Recipes</a></li>
+            <li class="nav-item active"><a class="nav-link" href="/user/{{username}}/saved_recipes">Profile</a></li>
+        </ul>
+        {% else %}
+        <ul class="navbar-nav mr-auto">
+            <li class="nav-item active"><a class="nav-link" href="/">Home</a></li>
+            <li class="nav-item active"><a class="nav-link" href="/login">Login</a></li>
+            <li class="nav-item active"><a class="nav-link" href="/register">Register</a></li>
+            <li class="nav-item active"><a class="nav-link" href="/restaurants">Restaurants</a></li>
+            <li class="nav-item active"><a class="nav-link" href="/recipes/search">Recipes</a></li>
+        </ul>
+        {% endif %}
+    </div>
+    </nav>
+</head>
+<body>
+    <div class="container">
+      <h1 class="mb-4" style="display: flex; align-items: center; justify-content: center">
+        <span>{{res['name']}}</span>
+        {% if logged_in %}
+        <button
+          id="element{{res['id']}}"
+          class="btn-light rounded"
+          style="
+            border: black solid 1px;
+            font-size: 16px;
+            margin-left: 30px;
+            margin-top: 5px;
+          "
+        >
+          <span id="innertext{{res['id']}}">Bookmark</span>
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="16"
+            height="16"
+            fill="currentColor"
+            class="bi bi-bookmark-fill"
+            style="display: none"
+            id="filledHeart{{res['id']}}"
+            viewBox="0 0 16 16"
+          >
+            <path
+              d="M2 2v13.5a.5.5 0 0 0 .74.439L8 13.069l5.26 2.87A.5.5 0 0 0 14 15.5V2a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2z"
+            />
+          </svg>
+
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="16"
+            height="16"
+            fill="currentColor"
+            class="bi bi-bookmark"
+            style="display: inline-block"
+            id="emptyHeart{{res['id']}}"
+            viewBox="0 0 16 16"
+          >
+            <path
+              d="M2 2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v13.5a.5.5 0 0 1-.777.416L8 13.101l-5.223 2.815A.5.5 0 0 1 2 15.5V2zm2-1a1 1 0 0 0-1 1v12.566l4.723-2.482a.5.5 0 0 1 .554 0L13 14.566V2a1 1 0 0 0-1-1H4z"
+            />
+          </svg>
+        </button>
+        {% endif %}
+        <script>
+          (function () {
+            let filledHeart = document.getElementById(
+              "filledHeart" + "{{res['id']}}"
+            );
+            let emptyHeart = document.getElementById(
+              "emptyHeart" + "{{res['id']}}"
+            );
+            let element = document.getElementById(
+              "element" + "{{res['id']}}"
+            );
+            let innertext = document.getElementById(
+              "innertext" + "{{res['id']}}"
+            );
+
+            async function postData(url = "", data = {}) {
+              // Default options are marked with *
+              const response = await fetch(url, {
+                method: "POST", // *GET, POST, PUT, DELETE, etc.
+                mode: "cors", // no-cors, *cors, same-origin
+                cache: "no-cache", // *default, no-cache, reload, force-cache, only-if-cached
+                credentials: "same-origin", // include, *same-origin, omit
+                headers: {
+                  "Content-Type": "application/json",
+                  // 'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                redirect: "follow", // manual, *follow, error
+                referrerPolicy: "no-referrer", // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
+                body: JSON.stringify(data), // body data type must match "Content-Type" header
+              });
+              return response.json(); // parses JSON response into native JavaScript objects
+            }
+
+            let dataToPost = {
+              user_id: "{{user_id}}",
+              restaurant_id: "{{res['id']}}",
+            };
+            
+            postData("/api/is_restaurant_favorited", dataToPost).then((json) => {
+              console.log(json);
+              if (json.favorited) {
+                filledHeart.style.display = "inline-block";
+                emptyHeart.style.display = "none";
+                innertext.innerHTML = "Bookmarked";
+                console.log(dataToPost);
+              } else {
+                filledHeart.style.display = "none";
+                emptyHeart.style.display = "inline-block";
+                innertext.innerHTML = "Bookmark";
+                console.log(dataToPost);
+              }
+            });
+            element.onclick = () => {
+              console.log(dataToPost);
+              postData("/api/is_restaurant_favorited", dataToPost).then((json) => {
+                console.log(json);
+                if (json.favorited == false) {
+                  filledHeart.style.display = "inline-block";
+                  emptyHeart.style.display = "none";
+                  innertext.innerHTML = "Bookmarked";
+                  console.log(dataToPost);
+                  return postData("/api/favorite_restaurant", dataToPost);
+                } else {
+                  filledHeart.style.display = "none";
+                  emptyHeart.style.display = "inline-block";
+                  innertext.innerHTML = "Bookmark";
+                  console.log(dataToPost);
+                  return postData("/api/unfavorite_restaurant", dataToPost);
+                }
+              });
+            };
+          })();
+        </script>
+      </h1>
+      <img
+        height="300px"
+        style="margin: 30px auto 30px auto"
+        class="mx-auto d-block"
+        src="{{res['image_url']}}"
+      />
+    </div>
+
+    <div class="row row-cols-1 row-cols-md-2 g-4">
+        <div class="col">
+          <div class="card h-100">
+            <h4 class="card-header">Details</h4>
+            <div class="card-body">
+              <h5 class="card-title">Cuisines</h5>
+              {% for i in res["categories"] %}
+                <li class="list-group-item">{{i['title']}}</li>
+              {% endfor %}
+              <br>
+              <h6>Price: {{res['price']}}</h6>
+              <br>
+              <h6>Rating: {{res['rating']}}</h6>
+            </div>
+          </div>
+        </div>
+
+        <div class="col">
+          <div class="card h-100">
+            <h4 class="card-header">Contact</h4>
+            <div class="card-body">
+              <a href="{{res['url']}}">Website</a>
+              <br>
+              <h6>Phone: {{res['display_phone']}}</h6>
+              <br> 
+              <h6>{% for i in res['location']['display_address'] %} {{i}} {%
+                endfor %}</h6>
+
+              <br>
+              <h5 class="card-title">Transactions</h5>
+              {% for i in res["transactions"] %}
+                <li class="list-group-item" style="text-transform: capitalize;">{{i}}</li>
+              {% endfor %}
+            </div>
+          </div>
+        </div>
+      </div>
+
+  </body>
+</body>

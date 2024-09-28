@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3"
+      crossorigin="anonymous"
+    />
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
+      crossorigin="anonymous"
+    ></script>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav mr-auto">
+          <li class="nav-item active"><a class="nav-link" href="/">Home</a></li>
+          <li class="nav-item active">
+            <a class="nav-link" href="/restaurants">Restaurants</a>
+          </li>
+          <li class="nav-item active">
+            <a class="nav-link" href="/recipes/search">Recipes</a>
+          </li>
+          <li class="nav-item active">
+            <a class="nav-link" href="/user/{{username}}/saved_recipes"
+              >Profile</a
+            >
+          </li>
+        </ul>
+      </div>
+    </nav>
+  </head>
+  <body>
+    <div class="container">
+      <section style="display: flex" class="mb-3 row">
+        <div
+          class="col-sm-2 align-items-center justify-content-center"
+          style="display: flex"
+        >
+          <img
+            src="{{user_personal_info['profile_picture']}}"
+            style="border-radius: 99999px;"
+            width="38px"
+            height="38px"
+          />
+        </div>
+        <section
+          style="display: flex; flex-direction: column; justify-content: center"
+          class="col-sm-10"
+        >
+          <p class="text-lowercase" style="font-size: 22px; margin: 0">
+            {{username}}
+          </p>
+          <p style="font-size: 18px; margin: 0; color: rgb(17, 140, 216); cursor: pointer;" 
+          data-bs-toggle="modal"
+          data-bs-target="#staticBackdrop">Change Profile Photo</p>
+            
+            <div
+              class="modal fade"
+              id="staticBackdrop"
+              tabindex="-1"
+              aria-labelledby="staticBackdropLabel"
+              aria-hidden="true"
+            >
+              <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5
+                      class="modal-title text-center"
+                      id="staticBackdropLabel"
+                    >
+                      Change Profile Photo
+                    </h5>
+                    <button
+                      type="button"
+                      class="btn-close"
+                      data-bs-dismiss="modal"
+                      aria-label="Close"
+                    ></button>
+                  </div>
+                  <div class="modal-body">
+                    <div style="display: flex; flex-direction: column">
+                      <form
+                        action="/api/update_user_profile_picture"
+                        method="post"
+                        enctype="multipart/form-data"
+                      >
+                        <div class="form-group">
+                          <div
+                            style="
+                              margin-top: 20px;
+                              display: flex;
+                              margin-bottom: 10px;
+                            "
+                          >
+                            <svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              width="24"
+                              height="24"
+                              fill="currentColor"
+                              class="bi bi-file-earmark-image"
+                              viewBox="0 0 16 16"
+                            >
+                              <path
+                                d="M6.502 7a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3z"
+                              />
+                              <path
+                                d="M14 14a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V2a2 2 0 0 1 2-2h5.5L14 4.5V14zM4 1a1 1 0 0 0-1 1v10l2.224-2.224a.5.5 0 0 1 .61-.075L8 11l2.157-3.02a.5.5 0 0 1 .76-.063L13 10V4.5h-2A1.5 1.5 0 0 1 9.5 3V1H4z"
+                              />
+                            </svg>
+                            <span style="padding-left: 14px"
+                              >Upload a Picture:</span
+                            >
+                          </div>
+
+                          <label
+                            for="exampleFormControlFile1"
+                            style="padding-right: 32px"
+                          >
+                          </label>
+                          <input
+                            type="file"
+                            class="form-control-file"
+                            id="exampleFormControlFile1"
+                            name="profile_picture"
+                          />
+                          
+                        </div>
+                        <div class="modal-footer" style="margin-top: 35px;">
+                          <input
+                            type="submit"
+                            class="btn-primary rounded"
+                            style="padding: 2.5px 15px"
+                            value="Ok"
+                          />
+                        </div>
+                      </form>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+        </section>
+      </section>
+
+      <form action="/api/update_user_info" method="post">
+        <div class="mb-3 row">
+          <label for="displayName" class="col-sm-2 col-form-label"
+            >Display Name</label
+          >
+          <div class="col-sm-10">
+            <input type="text" name="display_name" class="form-control" id="displayName" value="{{user_personal_info['display_name']}}"/>
+          </div>
+        </div>
+        <div class="mb-3 row">
+          <label for="displayPassword" class="col-sm-2 col-form-label">Bio</label>
+          <div class="col-sm-10">
+            <input type="text" name="bio" class="form-control" id="displayPassword" value="{{user_personal_info['bio']}}"/>
+          </div>
+        </div>
+        <div class="mb-3 row">
+          <div class="col-sm-2"></div>
+          <div class="col-sm-10">
+            <input type="submit" class="btn-primary rounded" value="Submit">
+          </div>
+        </div>
+        
+      </form>
+      
+      </div>
+    </div>
+  </body>
+</html>

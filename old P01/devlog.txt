@@ -1,0 +1,111 @@
+Team Mango - Aryaman Goenka, Sadid Ethun, Haotian Gan
+SoftDev
+P01
+2021-12-09
+
+aryamanG, haotianG, sadidE --12-09-2021 8:00
+- Received feedback from peers about design doc 
+- Requires more elaboration on APIs, a breakdown of database structure, and information on our endpoints
+
+aryamanG -- 2021-12-09 14:00
+- Revised Site Components and site description
+- Added routes section and database organization
+- Divided flow chart into site map and component map
+
+haotianG -- 2021-12-09 20:00
+- Refined descriptions of APIs 
+- Detailed routes
+- Elaborated on databases organization
+
+aryamanG -- 2021-12-12 15:00
+- Edited Project abstract, roles and Set Up instructions
+
+aryamanG -- 2021-13-12 8:00
+- Login and Signup functionality with SQlite
+
+aryamanG -- 2021-13-12 8:00
+- post functionality and basic routing to allow users to view and create posts
+
+sadidE -- 2021-13-12 8:40
+- Made search bar for the restaurant search feature
+
+aryamanG -- 2020-13-12 18:00
+- refactoring routing to stop non-loged in site visitors from accessing blog information
+
+sadidE -- 2021-16-12 8:40
+- Made nav bar and added it to every page
+
+haotianG -- 2020-16-12 1:00
+- Updated function for setting up the database
+- Added Yelp Fusion API to design document (it's better than Documenu for finding resturants)
+- Worked on home page
+- Going to setup user profiles soon
+
+-aryamanG -- 2020-16-12 18:00
+- Fixed editing and deleting post functions
+
+-aryamanG -- 2020-19-12 12:00
+- Search Result Cards
+
+-haotianG -- 2020-19-12 13:00
+- Recipe Cards
+- Spoonacular API working
+
+sadidE -- 2021-19-12 8:40
+- Made restaurant search feature using the yelp API
+- Users can search using a cuisine
+- It displays restaurants in NYC before the user searches anything
+
+-aryamanG -- 2020-20-12 22:00
+- Yelp API calls
+- Find restaurants based off input text
+- autocomplete search results based of input text
+
+haotianG -- 2021-21-2021 12:00
+- Makeshift fix for getting rid of HTML tags in spoonacular summary json data using regex
+- Working on individual recipe pages now
+
+sadidE -- 2021-22-12 8:40
+- Made a dropdown form for the cuisine search
+- User can now unput their location when searching
+
+haotianG -- 2022-02-01 4:30
+- CRUD for comments, posts, and favorite recipes/posts
+- Saving/favoriting recipe functionality
+- Breaking changes to the database: I'm currently working on getting profiles set up. Don't worry! 
+
+haotianG -- 2022-02-01 9:30
+- Finished up upload photo feature for all pages
+- Finished display name / bio changes
+- Added "Bookmark feature" to recipe pages
+
+haotianG -- 2022-03-01 9:30
+- Instagram-like profile page with favorite restaurants, favorite recipes, and user posts
+- Comment system added 
+- Finished getting USDA api working for each ingredient in a spoonacular recipe
+- Deleting posts now works
+- You can now use "openModal" as a query in /user/{username}/user_posts to open up a post that the user has (if it exists)
+
+aryamanG 2021-03-01 19:00
+- fixed restaurants page
+- fixed bugs in routing
+- added bootstrap styling to certain pages
+
+haotianG -- 2022-04-01 9:30
+- Finished up home page with random posts and random user suggestions
+- Working on adding bookmarks to restaurant pages
+- Many fixes to making sure you can't delete other people's posts / use buttons you're not supposed to
+
+sadidE -- 2022-04-01 01:45
+- Updated the formatting for the login and register forms.
+
+aryamanG 2021-04-01 23:00
+- allowed users to utilize api without loggin in
+
+haotianG -- 2022-05-01 3:30
+- Final changes after restaurant bookmark bug was discovered
+- Updated design doc
+- Added our apis to the api_kb
+- API key management system working / ready for presentation 
+
+

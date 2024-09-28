@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="Cache-Control" content="private, no-store" />
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3"
+      crossorigin="anonymous"
+    />
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
+      crossorigin="anonymous"
+    ></script>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav mr-auto">
+          <li class="nav-item active"><a class="nav-link" href="/">Home</a></li>
+          <li class="nav-item active">
+            <a class="nav-link" href="/restaurants">Restaurants</a>
+          </li>
+          <li class="nav-item active">
+            <a class="nav-link" href="/recipes/search">Recipes</a>
+          </li>
+          <li class="nav-item active">
+            <a class="nav-link" href="/user/{{viewing_username}}/saved_recipes"
+              >Profile</a
+            >
+          </li>
+        </ul>
+      </div>
+    </nav>
+  </head>
+  <body>
+    <div style="width: 905px" class="mx-auto">
+      <div style="display: flex; justify-content: center; margin: 30px 0">
+        <div style="width: 291.67px; display: flex; justify-content: center">
+          <img
+            src="{{user_personal_info['profile_picture']}}"
+            style="border-radius: 999999px"
+            width="150px"
+            height="150px"
+          />
+        </div>
+        <section
+          style="
+            width: 613.33px;
+            height: 150px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+          "
+        >
+          <div style="display: flex; align-items: center">
+            <h1
+              class="display-4 text-lowercase"
+              style="font-size: 32px; padding-right: 30px"
+            >
+              {{username}}
+            </h1>
+            {% if lookingAtOwnBlog %}
+            <a href="/user/{{username}}/user_profile">
+              <button
+                class="btn-light rounded"
+                style="
+                  border: 1px solid black;
+                  height: 30px;
+                  align-self: center;
+                "
+              >
+                Edit Profile
+              </button>
+            </a>
+            {% endif %}
+          </div>
+          <div style="display: flex">
+            <p style="padding-right: 30px"><b>{{user_post_count}}</b> posts</p>
+            <p style="padding-right: 30px">
+              <b>{{user_favorite_recipe_count}}</b> recipes
+            </p>
+            <p><b>{{user_favorite_restaurant_count}}</b> restaurants</p>
+          </div>
+          <div>
+            <b>{{user_personal_info["display_name"]}}</b>
+            <p style="margin: 0">{{user_personal_info["bio"]}}</p>
+          </div>
+        </section>
+      </div>
+      <div
+        style="max-width: 905px; border-top: solid 1px rgb(236, 236, 236)"
+        class="mx-auto"
+      ></div>
+      <div
+        style="display: flex; justify-content: space-between; width: 400px"
+        class="mx-auto"
+      >
+        <a
+          href="/user/{{username}}/user_posts"
+          class="text-decoration-none text-black"
+        >
+          <section style="padding-top: 20px; padding-bottom: 20px">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="16"
+              height="16"
+              fill="currentColor"
+              class="bi bi-grid-3x3"
+              viewBox="0 0 16 16"
+            >
+              <path
+                d="M0 1.5A1.5 1.5 0 0 1 1.5 0h13A1.5 1.5 0 0 1 16 1.5v13a1.5 1.5 0 0 1-1.5 1.5h-13A1.5 1.5 0 0 1 0 14.5v-13zM1.5 1a.5.5 0 0 0-.5.5V5h4V1H1.5zM5 6H1v4h4V6zm1 4h4V6H6v4zm-1 1H1v3.5a.5.5 0 0 0 .5.5H5v-4zm1 0v4h4v-4H6zm5 0v4h3.5a.5.5 0 0 0 .5-.5V11h-4zm0-1h4V6h-4v4zm0-5h4V1.5a.5.5 0 0 0-.5-.5H11v4zm-1 0V1H6v4h4z"
+              />
+            </svg>
+            <span>Posts</span>
+          </section>
+        </a>
+
+        <a
+          href="/user/{{username}}/saved_recipes"
+          class="text-decoration-none text-black"
+        >
+          <section style="padding-top: 20px; padding-bottom: 20px">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="16"
+              height="16"
+              fill="currentColor"
+              class="bi bi-journals"
+              viewBox="0 0 16 16"
+            >
+              <path
+                d="M5 0h8a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2 2 2 0 0 1-2 2H3a2 2 0 0 1-2-2h1a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V4a1 1 0 0 0-1-1H3a1 1 0 0 0-1 1H1a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v9a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H5a1 1 0 0 0-1 1H3a2 2 0 0 1 2-2z"
+              />
+              <path
+                d="M1 6v-.5a.5.5 0 0 1 1 0V6h.5a.5.5 0 0 1 0 1h-2a.5.5 0 0 1 0-1H1zm0 3v-.5a.5.5 0 0 1 1 0V9h.5a.5.5 0 0 1 0 1h-2a.5.5 0 0 1 0-1H1zm0 2.5v.5H.5a.5.5 0 0 0 0 1h2a.5.5 0 0 0 0-1H2v-.5a.5.5 0 0 0-1 0z"
+              />
+            </svg>
+            <span>Recipes</span>
+          </section>
+        </a>
+
+        <a
+          href="/user/{{username}}/saved_restaurants"
+          class="text-decoration-none text-black"
+        >
+          <section
+            style="
+              padding-top: 19px;
+              padding-bottom: 20px;
+              border-top: 1px black solid;
+            "
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="16"
+              height="16"
+              fill="currentColor"
+              class="bi bi-shop"
+              viewBox="0 0 16 16"
+            >
+              <path
+                d="M2.97 1.35A1 1 0 0 1 3.73 1h8.54a1 1 0 0 1 .76.35l2.609 3.044A1.5 1.5 0 0 1 16 5.37v.255a2.375 2.375 0 0 1-4.25 1.458A2.371 2.371 0 0 1 9.875 8 2.37 2.37 0 0 1 8 7.083 2.37 2.37 0 0 1 6.125 8a2.37 2.37 0 0 1-1.875-.917A2.375 2.375 0 0 1 0 5.625V5.37a1.5 1.5 0 0 1 .361-.976l2.61-3.045zm1.78 4.275a1.375 1.375 0 0 0 2.75 0 .5.5 0 0 1 1 0 1.375 1.375 0 0 0 2.75 0 .5.5 0 0 1 1 0 1.375 1.375 0 1 0 2.75 0V5.37a.5.5 0 0 0-.12-.325L12.27 2H3.73L1.12 5.045A.5.5 0 0 0 1 5.37v.255a1.375 1.375 0 0 0 2.75 0 .5.5 0 0 1 1 0zM1.5 8.5A.5.5 0 0 1 2 9v6h1v-5a1 1 0 0 1 1-1h3a1 1 0 0 1 1 1v5h6V9a.5.5 0 0 1 1 0v6h.5a.5.5 0 0 1 0 1H.5a.5.5 0 0 1 0-1H1V9a.5.5 0 0 1 .5-.5zM4 15h3v-5H4v5zm5-5a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v3a1 1 0 0 1-1 1h-2a1 1 0 0 1-1-1v-3zm3 0h-2v3h2v-3z"
+              />
+            </svg>
+            <span>Restaurants</span>
+          </section>
+        </a>
+      </div>
+      <div>
+        <div class="row g-5">
+          {% for restaurant in favorite_restaurants %}
+          <div class="col-4">
+            <a href="/restaurants/view?id={{restaurant['restaurant_id']}}">
+              <div
+                style="
+                  width: 293px;
+                  height: 293px;
+                  overflow: hidden;
+                  display: flex;
+                  align-items: center;
+                  justify-content: center;
+                  background-color: grey;
+                "
+              >
+                <img
+                  style="height: 310px"
+                  src="{{restaurant['restaurantJSON']['image_url']}}"
+                />
+              </div>
+            </a>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
