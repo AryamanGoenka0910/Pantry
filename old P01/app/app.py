@@ -466,12 +466,14 @@ def recipes_search():
     else:
         login = False
 
+    
     if login:    
         user_id = db_builder.get_id_from_username(session.get("username"))
         if(request.method == 'GET'):
             return render_template('recipes.html', user_id=user_id, username=session.get("username"), logged_in=login)
         if(request.method == 'POST'):
             query = request.form.get("search")
+            print(query)
             return render_template('recipes.html', recipes=recipes.searchRecipes(query), logged_in=login,
             user_id=user_id, username=session.get("username"))
     else:
